@@ -1,0 +1,42 @@
+# Python virtualenvs
+.venv/
+venv/
+env/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# IDE/editor
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.*
+
+# Misc
+*.swp
+*.swo
+
+# Optional: ignore local test outputs
+coverage/
+.htmlcov/
+
+# Allow project-specific exceptions by editing this file if needed

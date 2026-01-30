@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="6" stdDeviation="18" flood-color="#000" flood-opacity="0.12" />
+    </filter>
+  </defs>
+
+  <!-- White card background -->
+  <rect width="1200" height="630" fill="#ffffff" rx="20" />
+  <rect x="0" y="0" width="1200" height="630" fill="none" rx="20" stroke="#eef2f6" />
+
+  <!-- Left content -->
+  <g transform="translate(80,96)">
+    <!-- Logo -->
+    <text x="0" y="0" font-family="Manrope, Arial, Helvetica, sans-serif" font-weight="800" font-size="78" fill="#0f172a">Wa<tspan fill="#007bff">vv</tspan></text>
+    <text x="0" y="74" font-family="Manrope, Arial, Helvetica, sans-serif" font-weight="600" font-size="22" fill="#475569">Lite Browser Test</text>
+
+    <rect x="0" y="100" width="640" height="1" fill="#eef2f6" rx="1" />
+
+    <text x="0" y="150" font-family="Manrope, Arial, Helvetica, sans-serif" font-weight="500" font-size="20" fill="#334155">Measure latency · jitter · download speed</text>
+  </g>
+
+  <!-- Right small card preview -->
+  <g transform="translate(760,80)" filter="url(#shadow)">
+    <rect x="0" y="0" width="360" height="220" rx="16" fill="#f8fafc" stroke="#e6eef7" />
+    <text x="26" y="44" font-family="Manrope, Arial" font-size="18" fill="#0f172a">Latency</text>
+    <text x="26" y="92" font-family="Manrope, Arial" font-size="40" font-weight="700" fill="#0f172a">12 <tspan font-size="18">ms</tspan></text>
+    <rect x="26" y="128" width="308" height="10" rx="6" fill="#e6eef7" />
+    <rect x="26" y="128" width="178" height="10" rx="6" fill="#007bff" />
+  </g>
+
+  <!-- Decorative subtle waves at bottom (light gray) -->
+  <g transform="translate(0,420)">
+    <path d="M0 30 C200 -10 400 30 600 30 C800 30 1000 -10 1200 30 L1200 210 L0 210 Z" fill="#f1f5f9" />
+  </g>
+
+  <!-- Footer small text -->
+  <text x="28" y="600" font-family="Manrope, Arial" font-size="13" fill="#667085">Wavv Lite — lightweight browser speed &amp; stability test</text>
+</svg>
