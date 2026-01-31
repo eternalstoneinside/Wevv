@@ -54,193 +54,333 @@
 			href="assets/icons/favicon-96x96.png"
 			sizes="96x96"
 		/>
-		<link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
-		<link rel="shortcut icon" href="assets/icons/favicon.ico" />
-		<link
-			rel="apple-touch-icon"
-			sizes="180x180"
-			href="assets/icons/apple-touch-icon.png"
-		/>
-		<meta name="apple-mobile-web-app-title" content="Wavv" />
-		<link rel="manifest" href="assets/icons/site.webmanifest" />
+		<!doctype html>
+		<html lang="en">
+			<head>
+				<meta charset="utf-8" />
+				<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-		<!-- Fonts & Performance -->
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap"
-			rel="stylesheet"
-		/>
-		<link rel="stylesheet" href="css/style.css" />
+				<title>Wavv Lite | Speed & Stability</title>
 
-		<!-- Critical CSS / Inline (optional) -->
-		<!-- You can inline above-the-fold critical CSS here to improve perceived performance -->
-	</head>
-	<body>
-		<!-- Background waves: decorative, behind content -->
-		<div class="background-waves" aria-hidden="true">
-			<svg
-				class="waves"
-				xmlns="http://www.w3.org/2000/svg"
-				viewBox="0 0 1440 320"
-				preserveAspectRatio="none"
-			>
-				<path
-					class="wave wave--1"
-					d="M0,160 C180,220 360,100 720,140 C1080,180 1260,120 1440,140 L1440 320 L0 320 Z"
-				></path>
-				<path
-					class="wave wave--2"
-					d="M0,200 C240,260 420,120 720,160 C1020,200 1200,140 1440,160 L1440 320 L0 320 Z"
-				></path>
-				<path
-					class="wave wave--3"
-					d="M0,220 C200,180 420,260 720,220 C1020,180 1220,260 1440,220 L1440 320 L0 320 Z"
-				></path>
-			</svg>
-		</div>
-		<div class="container">
-			<header>
-				<div class="header-top">
-					<h1 class="logo">Wa<span>vv</span></h1>
-					<button
-						id="burger-btn"
-						class="burger-btn"
-						aria-label="Open menu"
-						aria-expanded="false"
+				<!-- Primary Meta Tags -->
+				<meta
+					name="description"
+					content="Wavv Lite — lightweight browser speed & stability test. Measure latency, jitter and download speed quickly in your browser."
+				/>
+				<meta
+					name="keywords"
+					content="speed test, latency, jitter, download speed, Wavv"
+				/>
+				<meta name="author" content="Wavv Project" />
+				<meta name="robots" content="index, follow" />
+				<link rel="canonical" href="/" />
+
+				<!-- Open Graph / Facebook -->
+				<meta property="og:title" content="Wavv Lite | Speed & Stability" />
+				<meta
+					property="og:description"
+					content="Lightweight browser speed & stability test."
+				/>
+				<meta property="og:type" content="website" />
+				<meta property="og:url" content="/" />
+				<meta
+					property="og:image"
+					content="https://eternalstoneinside.github.io/Wevv/assets/icons/preview.svg"
+				/>
+				<meta property="og:image:width" content="1200" />
+				<meta property="og:image:height" content="630" />
+				<meta property="og:image:alt" content="Wavv Lite preview" />
+				<meta name="twitter:card" content="summary_large_image" />
+				<meta
+					name="twitter:image"
+					content="https://eternalstoneinside.github.io/Wevv/assets/icons/preview.svg"
+				/>
+				<meta property="og:site_name" content="Wavv" />
+
+				<!-- Mobile / PWA -->
+				<meta name="theme-color" content="#007bff" />
+				<meta name="referrer" content="no-referrer-when-downgrade" />
+				<meta name="format-detection" content="telephone=no" />
+
+				<!-- Icons & Manifest (place your icons in assets/icons/) -->
+				<link
+					rel="icon"
+					type="image/png"
+					href="assets/icons/favicon-96x96.png"
+					sizes="96x96"
+				/>
+				<link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+				<link rel="shortcut icon" href="assets/icons/favicon.ico" />
+				<link
+					rel="apple-touch-icon"
+					sizes="180x180"
+					href="assets/icons/apple-touch-icon.png"
+				/>
+				<meta name="apple-mobile-web-app-title" content="Wavv" />
+				<link rel="manifest" href="assets/icons/site.webmanifest" />
+
+				<!-- Fonts & Performance -->
+				<link rel="preconnect" href="https://fonts.googleapis.com" />
+				<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+				<link
+					href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap"
+					rel="stylesheet"
+				/>
+				<link rel="stylesheet" href="css/style.css" />
+
+				<!-- Critical CSS / Inline (optional) -->
+				<!-- You can inline above-the-fold critical CSS here to improve perceived performance -->
+			</head>
+			<body>
+				<!-- Background waves: decorative, behind content -->
+				<div class="background-waves" aria-hidden="true">
+					<svg
+						class="waves"
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 1440 320"
+						preserveAspectRatio="none"
 					>
-						<span class="burger-line"></span>
-						<span class="burger-line"></span>
-						<span class="burger-line"></span>
-					</button>
+						<path
+							class="wave wave--1"
+							d="M0,160 C180,220 360,100 720,140 C1080,180 1260,120 1440,140 L1440 320 L0 320 Z"
+						></path>
+						<path
+							class="wave wave--2"
+							d="M0,200 C240,260 420,120 720,160 C1020,200 1200,140 1440,160 L1440 320 L0 320 Z"
+						></path>
+						<path
+							class="wave wave--3"
+							d="M0,220 C200,180 420,260 720,220 C1020,180 1220,260 1440,220 L1440 320 L0 320 Z"
+						></path>
+					</svg>
 				</div>
-
-				<!doctype html>
-				<html lang="en">
-					<head>
-						<meta charset="utf-8" />
-						<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-						<meta name="viewport" content="width=device-width, initial-scale=1" />
-
-						<title>Wavv Lite | Speed & Stability</title>
-
-						<!-- Primary Meta Tags -->
-						<meta
-							name="description"
-							content="Wavv Lite — lightweight browser speed & stability test. Measure latency, jitter and download speed quickly in your browser."
-						/>
-						<meta
-							name="keywords"
-							content="speed test, latency, jitter, download speed, Wavv"
-						/>
-						<meta name="author" content="Wavv Project" />
-						<meta name="robots" content="index, follow" />
-						<link rel="canonical" href="/" />
-
-						<!-- Open Graph / Facebook -->
-						<meta property="og:title" content="Wavv Lite | Speed & Stability" />
-						<meta
-							property="og:description"
-							content="Lightweight browser speed & stability test."
-						/>
-						<meta property="og:type" content="website" />
-						<meta property="og:url" content="/" />
-						<meta
-							property="og:image"
-							content="https://eternalstoneinside.github.io/Wevv/assets/icons/preview.svg"
-						/>
-						<meta property="og:image:width" content="1200" />
-						<meta property="og:image:height" content="630" />
-						<meta property="og:image:alt" content="Wavv Lite preview" />
-						<meta name="twitter:card" content="summary_large_image" />
-						<meta
-							name="twitter:image"
-							content="https://eternalstoneinside.github.io/Wevv/assets/icons/preview.svg"
-						/>
-						<meta property="og:site_name" content="Wavv" />
-
-						<!-- Mobile / PWA -->
-						<meta name="theme-color" content="#007bff" />
-						<meta name="referrer" content="no-referrer-when-downgrade" />
-						<meta name="format-detection" content="telephone=no" />
-
-						<!-- Icons & Manifest (place your icons in assets/icons/) -->
-						<link
-							rel="icon"
-							type="image/png"
-							href="assets/icons/favicon-96x96.png"
-							sizes="96x96"
-						/>
-						<link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
-						<link rel="shortcut icon" href="assets/icons/favicon.ico" />
-						<link
-							rel="apple-touch-icon"
-							sizes="180x180"
-							href="assets/icons/apple-touch-icon.png"
-						/>
-						<meta name="apple-mobile-web-app-title" content="Wavv" />
-						<link rel="manifest" href="assets/icons/site.webmanifest" />
-
-						<!-- Fonts & Performance -->
-						<link rel="preconnect" href="https://fonts.googleapis.com" />
-						<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-						<link
-							href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap"
-							rel="stylesheet"
-						/>
-						<link rel="stylesheet" href="css/style.css" />
-
-						<!-- Critical CSS / Inline (optional) -->
-						<!-- You can inline above-the-fold critical CSS here to improve perceived performance -->
-					</head>
-					<body>
-						<!-- Background waves: decorative, behind content -->
-						<div class="background-waves" aria-hidden="true">
-							<svg
-								class="waves"
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 1440 320"
-								preserveAspectRatio="none"
+				<div class="container">
+					<header>
+						<div class="header-top">
+							<h1 class="logo">Wa<span>vv</span></h1>
+							<button
+								id="burger-btn"
+								class="burger-btn"
+								aria-label="Open menu"
+								aria-expanded="false"
 							>
-								<path
-									class="wave wave--1"
-									d="M0,160 C180,220 360,100 720,140 C1080,180 1260,120 1440,140 L1440 320 L0 320 Z"
-								></path>
-								<path
-									class="wave wave--2"
-									d="M0,200 C240,260 420,120 720,160 C1020,200 1200,140 1440,160 L1440 320 L0 320 Z"
-								></path>
-								<path
-									class="wave wave--3"
-									d="M0,220 C200,180 420,260 720,220 C1020,180 1220,260 1440,220 L1440 320 L0 320 Z"
-								></path>
-							</svg>
+								<span class="burger-line"></span>
+								<span class="burger-line"></span>
+								<span class="burger-line"></span>
+							</button>
 						</div>
-						<div class="container">
-							<header>
-								<div class="header-top">
-									<h1 class="logo">Wa<span>vv</span></h1>
-									<button
-										id="burger-btn"
-										class="burger-btn"
-										aria-label="Open menu"
-										aria-expanded="false"
+
+						<p class="tagline">Lite Browser Test</p>
+						<!-- Burger menu (always visible) -->
+					</header>
+
+					<!-- Side menu (slides from left) -->
+					<nav id="side-menu" class="side-menu" aria-hidden="true">
+						<!-- Logo placed in the menu header, opposite the close button -->
+						<div class="menu-logo">
+							<a href="/" class="menu-logo-link" aria-label="Home"
+								>Wa<span>vv</span></a
+							>
+						</div>
+						<button id="menu-close" class="menu-close" aria-label="Close menu">
+							✕
+						</button>
+						<div class="menu-content">
+							<!-- Settings section: theme toggle + help/about -->
+							<div class="menu-section settings-section" aria-label="Settings">
+								<ul class="settings-list">
+									<li
+										class="project-card menu-action"
+										role="button"
+										tabindex="0"
+										aria-pressed="false"
+										aria-label="Theme"
 									>
-										<span class="burger-line"></span>
-										<span class="burger-line"></span>
-										<span class="burger-line"></span>
-									</button>
+										<div class="project-info">
+											<strong class="project-title">Theme</strong>
+											<span class="project-desc">Light / Dark</span>
+										</div>
+										<div class="action-toggle">
+											<input
+												type="checkbox"
+												class="input"
+												id="theme-switch"
+												aria-label="Toggle theme"
+											/>
+											<label
+												for="theme-switch"
+												class="toggle toggle--pill"
+												title="Toggle theme"
+												tabindex="0"
+												><span class="vh">Toggle theme</span></label
+											>
+										</div>
+									</li>
+									<li
+										class="project-card"
+										role="button"
+										tabindex="0"
+										data-project="about"
+										aria-pressed="false"
+									>
+										<div class="project-info">
+											<strong class="project-title">Help / About</strong>
+											<span class="project-desc">How it works · Privacy</span>
+										</div>
+										<span class="badge">Info</span>
+									</li>
+								</ul>
+							</div>
+
+							<!-- Projects section: future projects only -->
+							<div
+								class="menu-section projects-section"
+								aria-label="Future projects"
+							>
+								<h3 class="menu-section-title">Future Projects</h3>
+								<ul class="projects-list">
+									<li
+										class="project-card"
+										role="button"
+										tabindex="0"
+										data-project="wavv-pro"
+										aria-pressed="false"
+									>
+										<div class="project-info">
+											<strong class="project-title">Wavv Pro</strong>
+											<span class="project-desc"
+												>Full-featured monitoring, upload test, alerts.</span
+											>
+										</div>
+										<span class="badge">Soon</span>
+									</li>
+									<li
+										class="project-card"
+										role="button"
+										tabindex="0"
+										data-project="mobile-app"
+										aria-pressed="false"
+									>
+										<div class="project-info">
+											<strong class="project-title">Mobile App</strong>
+											<span class="project-desc"
+												>PWA / native-like experience for phones.</span
+											>
+										</div>
+										<span class="badge">Planned</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</nav>
+					<div id="menu-overlay" class="menu-overlay" hidden></div>
+
+					<main class="test-card">
+						<div class="info-bar" id="info-bar">
+							<div class="info-item">
+								<span class="info-label">IP:</span>
+								<span id="user-ip">Loading...</span>
+							</div>
+							<div class="info-item">
+								<span class="info-label">Provider:</span>
+								<span id="user-isp">...</span>
+							</div>
+							<div class="info-item">
+								<span class="info-label">Location:</span>
+								<span id="user-loc">...</span>
+							</div>
+						</div>
+						<div class="status-indicator" id="status-indicator">Ready to test</div>
+
+						<div class="metrics">
+							<div class="metric-item">
+								<span class="label">Latency</span>
+								<div class="value" id="latency-value">
+									<span id="latency-ms">0 <small>ms</small></span>
+									<div id="latency-jitter" class="sub" style="opacity: 0">
+										Jitter: ±0 ms
+									</div>
 								</div>
+							</div>
+							<div class="metric-item">
+								<span class="label">Download</span>
+								<div class="value" id="download-value">0 <small>Mbps</small></div>
+							</div>
+						</div>
 
-								<p class="tagline">Lite Browser Test</p>
-								<!-- Burger menu (always visible) -->
-							</header>
+						<div class="progress-container">
+							<div class="progress-bar" id="progress-bar"></div>
+						</div>
+
+						<button id="start-btn" class="main-button">Start Test</button>
+					</main>
+
+					<footer>
+						<p>&copy; 2025 eternalstoneinside</p>
+					</footer>
 				</div>
-			</div>
-		</div>
 
-		<script src="js/utils.js"></script>
-		<script src="js/engine.js"></script>
-		<script src="js/main.js"></script>
-	</body>
-</html>
+				<!-- Project modal (hidden by default) -->
+				<div
+					id="project-modal"
+					class="project-modal"
+					aria-hidden="true"
+					role="dialog"
+					aria-modal="true"
+					aria-labelledby="project-modal-title"
+				>
+					<div class="project-modal-overlay" id="project-modal-overlay"></div>
+					<div class="project-modal-content" role="document">
+						<div class="modal-header">
+							<div class="modal-left">
+								<div class="modal-icon" aria-hidden="true">
+									<svg
+										width="36"
+										height="36"
+										viewBox="0 0 24 24"
+										fill="none"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path
+											d="M2 12l4 1 1 4 3-3 4 1 1-4 4-1-4-1-1-4-4 1-3-3-1 4-4 1z"
+											fill="currentColor"
+											opacity="0.12"
+										/>
+										<path
+											d="M12 2l2.39 4.85L19 9l-4 3 1 5L12 14l-4 3 1-5-4-3 4.61-2.15L12 2z"
+											fill="currentColor"
+										/>
+									</svg>
+								</div>
+								<h2 id="project-modal-title">Title</h2>
+							</div>
+							<button
+								class="modal-close"
+								id="project-modal-close"
+								aria-label="Close"
+							>
+								✕
+							</button>
+						</div>
+						<p class="modal-subtitle" id="project-modal-subtitle">Short summary</p>
+						<div id="project-modal-desc" class="project-modal-desc">
+							Detailed information about the selected project will appear here.
+							Select a project to view its description, features and status.
+						</div>
+						<ul
+							id="project-modal-features"
+							class="features-list"
+							aria-hidden="true"
+						></ul>
+						<div class="modal-actions">
+							<button id="modal-ok" class="main-button">Got it</button>
+						</div>
+					</div>
+				</div>
+
+				<script src="js/utils.js"></script>
+				<script src="js/engine.js"></script>
+				<script src="js/main.js"></script>
+			</body>
+		</html>
