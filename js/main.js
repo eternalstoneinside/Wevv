@@ -44,6 +44,36 @@ const engine = new WavvEngine();
 	switchEl.addEventListener("change", () => {
 		applyTheme(switchEl.checked ? "dark" : "light");
 	});
+
+	// Make the whole theme card clickable and keyboard-activatable
+	const menuAction = document.querySelector(".project-card.menu-action");
+	if (menuAction) {
+		// reflect initial pressed state
+		menuAction.setAttribute(
+			"aria-pressed",
+			switchEl.checked ? "true" : "false",
+		);
+
+		menuAction.addEventListener("click", (ev) => {
+			// avoid double-toggle when clicking the inner label/input
+			if (
+				ev.target.closest &&
+				(ev.target.closest('label[for="theme-switch"]') ||
+					ev.target.closest("input#theme-switch"))
+			)
+				return;
+			switchEl.checked = !switchEl.checked;
+			applyTheme(switchEl.checked ? "dark" : "light");
+		});
+
+		menuAction.addEventListener("keydown", (e) => {
+			if (e.key === "Enter" || e.key === " ") {
+				e.preventDefault();
+				switchEl.checked = !switchEl.checked;
+				applyTheme(switchEl.checked ? "dark" : "light");
+			}
+		});
+	}
 })();
 
 // Menu (burger) open/close logic
@@ -208,3 +238,180 @@ window.addEventListener("load", async () => {
 			"Unable to retrieve network info";
 	}
 });
+
+// Menu projects: open a modal with project details (coming soon)
+(function () {
+	const menuContent = document.querySelector(".menu-content");
+	if (!menuContent) return;
+
+	// modal elements
+	const modalEl = document.getElementById("project-modal");
+	const modalOverlay = document.getElementById("project-modal-overlay");
+	const modalTitleEl = document.getElementById("project-modal-title");
+	const modalSubtitleEl = document.getElementById("project-modal-subtitle");
+	const modalDescEl = document.getElementById("project-modal-desc");
+	const modalFeaturesEl = document.getElementById("project-modal-features");
+	const modalCloseBtn = document.getElementById("project-modal-close");
+	const modalOkBtn = document.getElementById("modal-ok");
+
+	function openProjectModal(name, title) {
+		if (!modalEl) return;
+		modalTitleEl && (modalTitleEl.textContent = title || "Info");
+
+		// defaults
+		let subtitle = "Coming soon";
+		let desc =
+			"We are working on this feature and will share updates soon. Coming soon — stay tuned!";
+		let features = [];
+
+		if (name === "wavv-pro") {
+			subtitle = "Advanced monitoring & reporting";
+			desc =
+				"Wavv Pro will bring more accurate measurements, historical charts and alerting — designed for power users and small teams. Coming soon — stay tuned!";
+			features = [
+				"Upload test (precise measurement)",
+				"Historical results with CSV export",
+				"Alerts via email or Telegram",
+				"Selectable regional test servers",
+			];
+		} else if (name === "mobile-app") {
+			subtitle = "PWA — mobile first";
+			desc =
+				"Mobile App will provide an installable, optimized interface for phones with quick tests and saved results for on-the-go diagnostics. Coming soon — stay tuned!";
+			features = [
+				"Installable PWA for home-screen use",
+				"Compact UI and large touch targets",
+				"Local results cache and history",
+				"Optional push notifications (opt-in)",
+			];
+		} else {
+			if (name === "about") {
+				subtitle = "About Wavv Lite";
+				// English description for About
+				desc = `
+					<p>Wavv Lite is a lightweight network test that runs entirely in your browser. We measure latency, jitter and download speed.</p>
+					<p><strong>How it works:</strong> your browser downloads small files from public servers — we infer speed and timing from those transfers. No software is installed on your computer.</p>
+					<p><strong>Privacy:</strong> we do not collect or send your personal data. Test results remain in your browser and are not uploaded to our servers.</p>
+					<p>If you have any questions, contact us and we will explain in plain terms.</p>
+					`;
+				features = [
+					"Measures latency and download speed",
+					"No accounts or passwords required",
+					"Results are not sent without your consent",
+					"Runs in the browser — no installation required",
+				];
+			} else {
+				// fallback: reuse card description if available
+				const card = menuContent.querySelector(`[data-project="${name}"]`);
+				if (card) {
+					const d = card.querySelector(".project-desc");
+					if (d) desc = d.textContent.trim();
+				}
+			}
+		}
+
+		if (modalSubtitleEl) modalSubtitleEl.textContent = subtitle;
+		if (modalDescEl) {
+			// allow HTML for longer explanatory text (we control the content)
+			modalDescEl.innerHTML = desc;
+		}
+		if (modalFeaturesEl) {
+			if (features.length > 0) {
+				modalFeaturesEl.innerHTML = features
+					.map((f) => `<li>${f}</li>`)
+					.join("");
+				modalFeaturesEl.setAttribute("aria-hidden", "false");
+			} else {
+				modalFeaturesEl.innerHTML = "";
+				modalFeaturesEl.setAttribute("aria-hidden", "true");
+			}
+		}
+
+		// prevent layout shift when scrollbar disappears: add right padding equal to scrollbar width
+		const scrollbarComp =
+			window.innerWidth - document.documentElement.clientWidth;
+		// If HTML explicitly reserves the scrollbar (via CSS `overflow-y: scroll`),
+		// don't add extra padding — that would cause a horizontal shift.
+		const htmlOverflowY = getComputedStyle(document.documentElement).overflowY;
+		if (scrollbarComp > 0 && htmlOverflowY !== "scroll") {
+			document.body.style.paddingRight = `${scrollbarComp}px`;
+		}
+
+		// show modal and play opening animation
+		modalEl.classList.remove("project-modal--closing");
+		modalEl.classList.add("project-modal--opening");
+		modalEl.setAttribute("aria-hidden", "false");
+		document.body.classList.add("modal-open");
+		// focus after a short delay so animation starts
+		setTimeout(() => {
+			if (modalCloseBtn) modalCloseBtn.focus();
+		}, 50);
+
+		// cleanup opening class after animation
+		const onOpenEnd = (e) => {
+			if (e.target !== modalEl.querySelector(".project-modal-content")) return;
+			modalEl.classList.remove("project-modal--opening");
+			modalEl.removeEventListener("animationend", onOpenEnd);
+		};
+		modalEl.addEventListener("animationend", onOpenEnd);
+	}
+
+	function closeProjectModal() {
+		if (!modalEl) return;
+		// If currently opening, remove that state
+		modalEl.classList.remove("project-modal--opening");
+		// add closing class to play animation, then actually hide
+		modalEl.classList.add("project-modal--closing");
+		const onCloseEnd = (e) => {
+			if (e.target !== modalEl.querySelector(".project-modal-content")) return;
+			modalEl.classList.remove("project-modal--closing");
+			modalEl.setAttribute("aria-hidden", "true");
+			document.body.classList.remove("modal-open");
+			// remove scrollbar compensation
+			document.body.style.paddingRight = "";
+			modalEl.removeEventListener("animationend", onCloseEnd);
+		};
+		modalEl.addEventListener("animationend", onCloseEnd);
+	}
+
+	// modal event handlers
+	if (modalCloseBtn) modalCloseBtn.addEventListener("click", closeProjectModal);
+	if (modalOkBtn) modalOkBtn.addEventListener("click", closeProjectModal);
+	if (modalOverlay) modalOverlay.addEventListener("click", closeProjectModal);
+	window.addEventListener("keydown", (e) => {
+		if (e.key === "Escape") closeProjectModal();
+	});
+
+	function handleProjectActivation(name, title) {
+		// close menu
+		document.body.classList.remove("menu-open");
+		const burger = document.getElementById("burger-btn");
+		if (burger) burger.setAttribute("aria-expanded", "false");
+		const menu = document.getElementById("side-menu");
+		if (menu) menu.setAttribute("aria-hidden", "true");
+
+		openProjectModal(name, title);
+	}
+
+	menuContent.addEventListener("click", (e) => {
+		const card = e.target.closest && e.target.closest(".project-card");
+		if (!card) return;
+		if (card.classList && card.classList.contains("menu-action")) return;
+		const name = card.getAttribute("data-project");
+		const titleEl = card.querySelector(".project-title");
+		const title = titleEl ? titleEl.textContent.trim() : name;
+		handleProjectActivation(name, title);
+	});
+
+	menuContent.addEventListener("keydown", (e) => {
+		if (e.key !== "Enter" && e.key !== " ") return;
+		const card = e.target.closest && e.target.closest(".project-card");
+		if (!card) return;
+		if (card.classList && card.classList.contains("menu-action")) return;
+		e.preventDefault();
+		const name = card.getAttribute("data-project");
+		const titleEl = card.querySelector(".project-title");
+		const title = titleEl ? titleEl.textContent.trim() : name;
+		handleProjectActivation(name, title);
+	});
+})();

@@ -1,11 +1,15 @@
 :root {
 	--primary-color: #007bff;
 	--bg-color: #f4f7f9;
+	--bg-grad-start: rgba(0, 123, 255, 0.06);
 	--text-color: #2d3436;
 	--card-bg: #ffffff;
 
 	/* Additional tokens */
 	--info-bg: #ffffff;
+
+	/* Muted / secondary text */
+	--muted-color: #7d8b95;
 
 	/* Transition timing tokens */
 	--transition-fast: 160ms;
@@ -18,6 +22,13 @@
 	--text-color-dark: #cfdff0;
 	--card-bg-dark: #0f1b23;
 	--info-bg-dark: rgba(255, 255, 255, 0.03);
+	/* Hover / subtle backgrounds and muted shadows that adapt to theme */
+	--item-hover-bg: rgba(0, 0, 0, 0.03);
+	--muted-shadow: rgba(0, 0, 0, 0.03);
+
+	/* Toggle appearance (visible on light theme, subtle on dark) */
+	--toggle-bg: rgba(0, 0, 0, 0.03);
+	--toggle-border: rgba(0, 0, 0, 0.06);
 }
 
 /* System preference handling moved to JS: script applies `body.theme-dark`/`body.theme-light`
@@ -31,6 +42,13 @@ body.theme-dark {
 	--text-color: var(--text-color-dark);
 	--card-bg: var(--card-bg-dark);
 	--info-bg: var(--info-bg-dark);
+	--item-hover-bg: rgba(255, 255, 255, 0.03);
+	--muted-shadow: rgba(255, 255, 255, 0.03);
+	--bg-grad-start: rgba(0, 0, 0, 0.25);
+
+	/* In dark theme the small toggle should be more transparent */
+	--toggle-bg: transparent;
+	--toggle-border: rgba(255, 255, 255, 0.04);
 }
 
 body.theme-light {
@@ -44,7 +62,11 @@ body {
 	margin: 0;
 	padding: 0;
 	font-family: "Manrope", sans-serif;
-	background-color: var(--bg-color);
+	background: linear-gradient(
+		180deg,
+		var(--bg-grad-start) 0%,
+		var(--bg-color) 60%
+	);
 	color: var(--text-color);
 	display: flex;
 	justify-content: center;
@@ -52,8 +74,31 @@ body {
 	height: 100vh;
 
 	transition:
-		background-color var(--transition-medium) ease,
+		background var(--transition-medium) ease,
 		color var(--transition-medium) ease;
+}
+
+/* Prevent layout shift when modal opens/closes by keeping scrollbar gutter stable */
+html {
+	overflow-y: scroll; /* reserve scrollbar space to avoid page content shift */
+	scrollbar-gutter: stable; /* keep scrollbar gutter reserved to prevent horizontal shift */
+}
+
+.project-modal-content {
+	will-change: transform, opacity;
+}
+
+/* Fix footer to bottom center of viewport */
+footer {
+	position: fixed;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: 12px;
+	z-index: 1300;
+	width: 100%;
+	max-width: 800px;
+	text-align: center;
+	pointer-events: auto;
 }
 
 .container {
@@ -61,7 +106,82 @@ body {
 	max-width: 800px;
 	padding: 20px;
 	text-align: center;
+	position: relative;
+	z-index: 1; /* keep content above decorative background */
 }
+
+/* Decorative background waves (behind content) */
+.background-waves {
+	position: fixed;
+	inset: 0;
+	width: 100%;
+	height: 120%; /* extend beyond viewport so waves aren't clipped */
+	pointer-events: none;
+	z-index: 0;
+	overflow: visible; /* allow SVG to extend below viewport without clipping */
+}
+.background-waves .waves {
+	position: absolute;
+	left: 50%;
+	bottom: -8%;
+	transform: translateX(-50%) translateY(0);
+	width: 200%;
+	height: 75vh; /* use viewport-relative height so curves have room */
+	display: block;
+}
+.background-waves .wave {
+	transform-origin: 50% 50%;
+	transform-box: fill-box; /* ensure CSS transforms use the SVG element box */
+	will-change: transform;
+}
+.wave--1 {
+	fill: rgba(0, 123, 255, 0.1);
+	animation: wave1 12s linear infinite;
+}
+.wave--2 {
+	fill: rgba(0, 123, 255, 0.07);
+	animation: wave2 18s linear infinite;
+}
+.wave--3 {
+	fill: rgba(0, 123, 255, 0.05);
+	animation: wave3 26s linear infinite;
+}
+
+@keyframes wave1 {
+	0% {
+		transform: translateX(0) translateY(0);
+	}
+	50% {
+		transform: translateX(-20%) translateY(6%);
+	}
+	100% {
+		transform: translateX(0) translateY(0);
+	}
+}
+@keyframes wave2 {
+	0% {
+		transform: translateX(0) translateY(0);
+	}
+	50% {
+		transform: translateX(-28%) translateY(4%);
+	}
+	100% {
+		transform: translateX(0) translateY(0);
+	}
+}
+@keyframes wave3 {
+	0% {
+		transform: translateX(0) translateY(0);
+	}
+	50% {
+		transform: translateX(-12%) translateY(10%);
+	}
+	100% {
+		transform: translateX(0) translateY(0);
+	}
+}
+
+/* Waves animate by default. (prefers-reduced-motion handling removed so waves run on all devices) */
 
 .logo {
 	font-size: 2.5rem;
@@ -77,26 +197,25 @@ body {
 	font-weight: bold;
 }
 
-header {
-	position: relative;
-}
-
-.theme-toggle {
-	border: none;
-	background: transparent;
+body {
+	margin: 0;
+	padding: 0;
+	font-family: "Manrope", sans-serif;
+	background-color: var(--bg-color); /* solid background, no top gradient */
 	color: var(--text-color);
-	font-size: 1.1rem;
-	cursor: pointer;
-	padding: 6px 8px;
-	border-radius: 8px;
-}
-.theme-toggle:focus {
-	outline: 2px solid rgba(0, 0, 0, 0.08);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+
+	transition:
+		background-color var(--transition-medium) ease,
+		color var(--transition-medium) ease;
 }
 
 .burger-btn {
 	position: absolute;
-	top: 8px;
+	top: 12px;
 
 	right: 0;
 	width: 36px;
@@ -127,7 +246,7 @@ header {
 	left: 0;
 	top: 0;
 	bottom: 0;
-	width: 240px;
+	width: 280px;
 	background: var(--card-bg);
 	box-shadow: 2px 0 12px rgba(0, 0, 0, 0.12);
 	transform: translateX(-100%);
@@ -136,35 +255,54 @@ header {
 		background-color var(--transition-medium) ease,
 		color var(--transition-medium) ease;
 	z-index: 1200;
-	padding: 48px 16px 16px 16px; /* резервируем место под header/иконки */
+	padding: 64px 16px 16px 16px; /* увеличить верхний отступ для логотипа и крестика */
 }
 .side-menu .menu-close {
 	position: absolute;
-	top: 8px;
-	right: 8px;
+	top: 12px;
+	right: 12px;
+	width: 34px;
+	height: 34px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	border: none;
 	background: transparent;
 	font-size: 18px;
 	cursor: pointer;
 	color: var(--text-color);
+	border-radius: 12px;
+	transition:
+		background-color var(--transition-fast) ease,
+		transform 120ms ease;
+}
+.side-menu .menu-close:hover {
+	background: rgba(0, 0, 0, 0.06);
+	transform: translateY(-1px);
+}
+.side-menu .menu-close:focus {
+	outline: none; /* removed strong focus ring for sidebar close button */
 }
 .side-menu .menu-content {
-	margin-top: 6px;
+	margin-top: 12px;
 }
-
+.header-top {
+	position: relative;
+}
 /* Menu header logo (opposite the close button) */
 .side-menu .menu-logo {
 	position: absolute;
-	top: 8px;
-	left: 12px;
+	top: 16px;
+	left: 16px;
 	z-index: 1250;
 }
 .side-menu .menu-logo-link {
 	color: var(--text-color);
-	font-weight: 800;
-	font-size: 1.05rem;
+	font-weight: 900;
+	font-size: 1.2rem;
 	text-decoration: none;
 	transition: color var(--transition-medium) ease;
+	padding-left: 6px;
 }
 .side-menu .menu-logo-link span {
 	color: var(--primary-color);
@@ -189,12 +327,17 @@ header {
 	scale: 1.3;
 }
 .toggle {
-	transition: all var(--transition-medium) ease;
-}
-/* Theme toggle as a single menu button: override absolute placement used elsewhere */
-.side-menu .menu-item.menu-theme-toggle {
-	position: static;
-	width: 100%;
+	display: inline-block;
+	box-sizing: border-box;
+	width: 40px;
+	height: 24px;
+	border-radius: 999px;
+	background: rgba(0, 0, 0, 0.06);
+	position: relative;
+	padding: 0; /* don't inherit padding from .toggle */
+	transition:
+		background-color var(--transition-medium) ease,
+		box-shadow 120ms ease;
 	background: transparent;
 	border: none;
 	padding: 8px 4px;
@@ -217,8 +360,6 @@ header {
 
 /* Classic circular toggle styles (scoped to menu) */
 .side-menu .toggle {
-	width: 56px;
-	height: 56px;
 	border-radius: 50%;
 	display: grid;
 	place-items: center;
@@ -266,6 +407,208 @@ header {
 	align-items: center;
 	justify-content: space-between;
 	gap: 8px;
+}
+
+/* Projects placeholder styles */
+.menu-section.projects-section {
+	margin-top: 18px;
+	text-align: left;
+}
+.menu-section-title {
+	font-size: 0.95rem;
+	color: var(--text-color);
+	margin: 6px 4px 10px 4px;
+	font-weight: 700;
+}
+.projects-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: grid;
+	gap: 8px;
+}
+.project-card {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 12px 10px;
+	border-radius: 12px;
+	background: transparent;
+	cursor: pointer;
+	transition:
+		background-color var(--transition-fast) ease,
+		transform 120ms ease;
+	color: var(--text-color);
+	min-height: 56px; /* unified item height */
+}
+.project-card:hover {
+	background: var(--item-hover-bg);
+	transform: translateY(-2px);
+}
+.project-card:focus {
+	/* background: var(--item-hover-bg); keep subtle background on focus */
+	transform: none; /* remove movement on focus */
+	box-shadow: none; /* remove focus ring */
+	outline: none;
+}
+.project-info {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	flex: 1 1 auto; /* ensure title/desc take remaining space */
+}
+.project-title {
+	font-size: 0.95rem;
+	font-weight: 600;
+}
+.project-desc {
+	font-size: 0.78rem;
+	color: var(--muted-color);
+}
+.badge {
+	background: var(--primary-color);
+	color: white;
+	font-size: 0.75rem;
+	padding: 6px 10px;
+	border-radius: 999px;
+	white-space: nowrap;
+	flex: 0 0 auto; /* keep badge compact at the end */
+}
+
+.menu-action {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 12px 10px; /* match project-card */
+	border-radius: 12px; /* match project-card */
+	cursor: pointer;
+	min-height: 56px; /* unified item height */
+}
+/* Ensure toggles and badges align consistently on the right */
+.menu-action .action-toggle,
+.project-card .badge {
+	align-self: center;
+	flex: 0 0 auto;
+}
+.menu-action .action-toggle {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.menu-action .input {
+	display: none;
+}
+.menu-action .toggle {
+	display: inline-grid;
+	grid-auto-flow: column;
+	gap: 6px;
+	align-items: center;
+	background: var(--toggle-bg);
+
+	border-radius: 999px;
+	padding: 6px 8px;
+	cursor: pointer;
+	/* border: 1px solid var(--primary-color); */
+}
+.menu-action .icon {
+	transition:
+		transform var(--transition-medium) ease,
+		opacity var(--transition-fast) ease;
+	color: #7d8b95;
+}
+.menu-action .icon--sun {
+	transform: scale(0);
+}
+.menu-action .input:checked + .toggle .icon--sun {
+	transform: scale(1);
+	color: #ffb74d;
+}
+.menu-action .input:checked + .toggle .icon--moon {
+	transform: scale(0);
+}
+.menu-action .input:not(:checked) + .toggle .icon--moon {
+	transform: scale(1);
+	color: #90a4ae;
+}
+
+/* Make menu-action visually match project cards on hover; keep focus subtle */
+.menu-action:hover {
+	background: var(--item-hover-bg);
+	transform: translateY(-2px);
+}
+.menu-action:focus-within,
+.menu-action:focus {
+	transform: none;
+	outline: none;
+}
+
+/* Pill-style toggle (replaces icon sun/moon) */
+.toggle--pill {
+	width: 48px;
+	height: 28px;
+	border-radius: 999px;
+	background: var(--item-hover-bg);
+	transform: none;
+	transition:
+		background-color var(--transition-medium) ease,
+		box-shadow 120ms ease;
+}
+.toggle--pill::after {
+	content: "";
+	position: absolute;
+	top: 3px;
+	left: 4px;
+	width: 22px;
+	height: 22px;
+	border-radius: 50%;
+	background: white;
+	box-shadow: 0 2px 6px rgba(16, 24, 40, 0.08);
+	transition:
+		transform 180ms ease,
+		background-color 180ms ease;
+}
+/* Checked state: blue background and knob moved right */
+input#theme-switch:checked + .toggle--pill {
+	background: var(--primary-color);
+}
+input#theme-switch:checked + .toggle--pill::after {
+	transform: translateX(16px);
+	background: white;
+}
+
+/* Focus / keyboard accessibility */
+input#theme-switch:focus + .toggle--pill,
+label.toggle--pill:focus {
+	box-shadow: none; /* remove strong focus halo in sidebar */
+}
+
+/* Visually-hidden helper */
+.vh,
+.visually-hidden {
+	position: absolute !important;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+	clip: rect(1px, 1px, 1px, 1px);
+	white-space: nowrap;
+	border: 0;
+	padding: 0;
+	margin: -1px;
+}
+
+@media (max-width: 480px) {
+	.menu-section-title {
+		font-size: 0.9rem;
+	}
+	/* Show project descriptions on mobile (compact style) */
+	.project-desc {
+		display: block;
+		font-size: 0.85rem;
+		color: var(--muted-color);
+		margin-top: 6px;
+	}
 }
 
 .menu-overlay {
@@ -323,7 +666,7 @@ body.menu-open .burger-line:nth-child(3) {
 	border-radius: 12px;
 	margin-bottom: 20px;
 	font-size: 0.85rem;
-	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+	box-shadow: 0 4px 15px var(--muted-shadow);
 	transition:
 		background-color var(--transition-medium) ease,
 		box-shadow var(--transition-medium) ease;
@@ -514,5 +857,323 @@ footer p {
 	.main-button {
 		padding: 12px;
 		font-size: 0.95rem;
+	}
+}
+
+/* Modal styles for project previews (appended) */
+.project-modal {
+	display: none;
+	position: fixed;
+	inset: 0;
+	z-index: 1400;
+	align-items: center;
+	justify-content: center;
+}
+.project-modal[aria-hidden="false"] {
+	display: grid;
+}
+.project-modal-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.45);
+	backdrop-filter: blur(2px);
+}
+.project-modal-content {
+	position: relative;
+	background: var(--card-bg);
+	color: var(--text-color);
+	max-width: 520px;
+	margin: 0 10px;
+	padding: 22px;
+	border-radius: 12px;
+	box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+	z-index: 1410;
+}
+
+/* Modal animations */
+@keyframes modal-in {
+	from {
+		transform: translateY(18px) scale(0.995);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0) scale(1);
+		opacity: 1;
+	}
+}
+
+@keyframes modal-out {
+	from {
+		transform: translateY(0) scale(1);
+		opacity: 1;
+	}
+	to {
+		transform: translateY(12px) scale(0.995);
+		opacity: 0;
+	}
+}
+
+@keyframes overlay-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes overlay-out {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+/* State classes applied by JS to control animation */
+.project-modal.project-modal--opening .project-modal-overlay {
+	animation: overlay-in 220ms ease-out both;
+}
+.project-modal.project-modal--closing .project-modal-overlay {
+	animation: overlay-out 160ms ease-in both;
+}
+.project-modal.project-modal--opening .project-modal-content {
+	animation: modal-in 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.project-modal.project-modal--closing .project-modal-content {
+	animation: modal-out 180ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+.project-modal-content h2 {
+	margin-top: 0;
+	margin-bottom: 8px;
+	font-size: 1.15rem;
+}
+.project-modal-content p {
+	color: #6b7880;
+	margin-bottom: 16px;
+}
+.modal-close {
+	position: relative;
+	top: 0;
+	right: 0;
+	border: none;
+	background: transparent;
+	font-size: 18px;
+	cursor: pointer;
+	color: var(--text-color);
+	padding: 6px;
+	border-radius: 8px;
+}
+.modal-close:hover {
+	background: rgba(0, 0, 0, 0.06);
+	transform: translateY(-1px);
+}
+.modal-actions {
+	text-align: right;
+}
+
+body.modal-open {
+	overflow: hidden;
+}
+
+@media (max-width: 480px) {
+	.project-modal-content {
+		width: calc(100% - 28px);
+		padding: 16px;
+		border-radius: 10px;
+	}
+	.modal-close {
+		top: 8px;
+		right: 8px;
+	}
+}
+
+/* Modal finer styles */
+.modal-header {
+	display: flex;
+	align-items: flex-start;
+
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 6px;
+}
+.modal-left {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+.modal-icon svg {
+	color: var(--primary-color);
+	width: 44px;
+	height: 44px;
+}
+.modal-subtitle {
+	color: #6b7880;
+	margin-top: 0;
+	margin-bottom: 12px;
+	font-weight: 600;
+}
+.project-modal-desc {
+	color: #556066;
+	margin-bottom: 12px;
+	line-height: 1.45;
+}
+.features-list {
+	list-style: none;
+	padding: 0;
+	margin: 0 0 30px 0;
+	display: grid;
+	gap: 8px;
+}
+.features-list li {
+	display: flex;
+	gap: 10px;
+	align-items: flex-start;
+}
+.features-list li::before {
+	content: "•";
+	color: var(--primary-color);
+	font-weight: 700;
+	margin-right: 6px;
+}
+
+.modal-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+}
+
+/* Additional mobile tweaks for sidebar and modal */
+@media (max-width: 480px) {
+	/* Make the side menu a full-screen drawer with larger touch targets */
+	.side-menu {
+		width: 100%;
+		max-width: 100%;
+		padding: 12px 12px 24px 12px;
+		box-shadow: none;
+		transform: translateX(-100%);
+		height: 100%;
+	}
+	.side-menu .menu-logo {
+		top: 16px;
+		left: 16px;
+	}
+	.side-menu .menu-close {
+		top: 12px;
+		right: 25px;
+		width: 48px;
+
+		font-size: 20px;
+		border-radius: 12px;
+	}
+	.menu-content {
+		margin-top: 76px; /* room for logo + close */
+		padding: 6px 6px 24px 6px;
+	}
+	.menu-section {
+		margin-top: 34px;
+	}
+	.settings-list,
+	.projects-list {
+		display: grid;
+		gap: 12px;
+		padding: 0 6px;
+		margin: 0;
+	}
+
+	.project-card {
+		padding: 14px 12px;
+		border-radius: 14px;
+		min-height: 64px; /* larger tap area */
+	}
+
+	/* make badge align right but not too far from edge */
+	.badge {
+		margin-right: 8px;
+	}
+
+	.menu-section-title {
+		margin: 12px 4px;
+		font-size: 1rem;
+	}
+
+	.badge {
+		font-size: 0.72rem;
+		padding: 6px 8px;
+	}
+
+	/* Slightly bigger pill toggle on mobile */
+	.toggle--pill {
+		width: 46px;
+		height: 26px;
+	}
+	.toggle--pill::after {
+		top: 3px;
+		left: 4px;
+		width: 20px;
+		height: 20px;
+	}
+
+	/* Modal: bottom sheet style on mobile */
+	.project-modal {
+		align-items: flex-end;
+	}
+	.modal-close {
+		display: none;
+	}
+	.project-modal-content {
+		max-width: 100%;
+		border-radius: 12px 12px 0 0;
+		padding: 16px 16px 20px 16px;
+		box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.28);
+		margin: 0;
+		transform: translateY(0);
+		/* mobile: limit height and allow inner scrolling to avoid page jump */
+		max-height: calc(100vh - 96px);
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+		padding-bottom: calc(16px + env(safe-area-inset-bottom));
+
+		/* reserve scrollbar gutter and add right padding so content isn't hidden behind scrollbar */
+		scrollbar-gutter: stable both-edges;
+		padding-inline-end: 20px; /* increased to avoid overlap */
+
+		/* ensure modal actions (buttons) respect the inner padding */
+		.modal-actions {
+			padding-inline-end: 12px;
+		}
+	}
+
+	/* small handle to indicate draggable bottom-sheet */
+	.project-modal-content::before {
+		content: "";
+		display: block;
+		width: 40px;
+		height: 4px;
+		border-radius: 999px;
+		background: rgba(0, 0, 0, 0.06);
+		position: absolute;
+		top: 10px;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 1420;
+	}
+
+	/* give header some breathing room so handle doesn't overlap text */
+	.modal-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding-top: 6px;
+		padding-bottom: 8px;
+	}
+	.modal-close {
+		position: absolute;
+		right: 12px;
+		top: 8px;
+	}
+	.project-modal-desc {
+		font-size: 0.96rem;
 	}
 }
